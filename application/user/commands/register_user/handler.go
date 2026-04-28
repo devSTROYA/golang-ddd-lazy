@@ -5,7 +5,7 @@ import (
 	uow "lazy/common"
 	userDomain "lazy/domain/user"
 	"lazy/infrastructure/config"
-	"os"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
@@ -63,10 +63,11 @@ func (h *Handler) Execute(ctx context.Context, cmd Command) (Result, error) {
 	}
 
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
-		Subject: user.Id().Value(),
-		ID:      uuid.NewString(),
+		Subject:   user.Id().Value(),
+		ID:        uuid.NewString(),
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(h.env.JwtExpirationTime) * time.Hour)),
 	})
-	accessToken, err := jwtToken.SignedString([]byte(os.Getenv("JWT_SECRET")))
+	accessToken, err := jwtToken.SignedString([]byte(h.env.JwtSecret))
 	if err != nil {
 		return Result{}, err
 	}

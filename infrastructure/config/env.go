@@ -1,7 +1,9 @@
 package config
 
 import (
+	"log"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
@@ -10,7 +12,7 @@ type Env struct {
 	Port              string
 	DatabaseURL       *string
 	JwtSecret         string
-	JwtExpirationTime string
+	JwtExpirationTime int
 }
 
 func NewEnv() Env {
@@ -19,7 +21,13 @@ func NewEnv() Env {
 		env = "DEV"
 	}
 
-	godotenv.Load(envFilePath(env))
+	envFilePath := envFilePath(env)
+	if envFilePath != nil {
+		godotenv.Load(*envFilePath)
+	} else {
+		godotenv.Load()
+	}
+
 	defaultConfig := Env{
 		Port:        ":8080",
 		DatabaseURL: nil,
@@ -42,21 +50,29 @@ func NewEnv() Env {
 
 	jwtExpirationTime := os.Getenv("JWT_EXPIRATION_TIME")
 	if jwtExpirationTime != "" {
-		defaultConfig.JwtExpirationTime = jwtExpirationTime
+		expirationTime, err := strconv.Atoi(jwtExpirationTime)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defaultConfig.JwtExpirationTime = expirationTime
 	}
 
 	return defaultConfig
 }
 
-func envFilePath(env string) string {
+func envFilePath(env string) *string {
+	var path string
 	switch env {
 	case "LOCAL":
-		return ".env.local"
+		path = ".env.local"
+		return &path
 	case "DEV":
-		return ".env.development.local"
+		path = ".env.development.local"
+		return &path
 	case "PROD":
-		return ".env.production.local"
+		path = ".env.production.local"
+		return &path
 	default:
-		return ".env"
+		return nil
 	}
 }
