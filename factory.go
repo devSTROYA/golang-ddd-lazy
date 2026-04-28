@@ -2,7 +2,6 @@ package main
 
 import (
 	"lazy/common/platform-echo/guards"
-	"lazy/infrastructure/config"
 	"lazy/presentation"
 	todoPresentation "lazy/presentation/http/todo"
 	userPresentation "lazy/presentation/http/user"
@@ -18,7 +17,7 @@ type Controller struct {
 	Todo todoPresentation.Controller
 }
 
-func NewApp(controller Controller, env config.Env) *echo.Echo {
+func NewApp(controller Controller) *echo.Echo {
 	app := echo.New()
 	app.Debug = true
 	app.HideBanner = true
