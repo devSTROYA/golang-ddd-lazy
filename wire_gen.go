@@ -32,13 +32,13 @@ func InitializeApp() *echo.Echo {
 	controller := user3.NewController(handler, userHandler)
 	todoRepository := local3.NewTodoRepository()
 	todoHandler := todo.NewHandler(todoRepository, repository)
-	handler2 := user4.NewHandler(todoRepository, unitOfWork, env)
+	handler2 := user4.NewHandler(todoRepository, unitOfWork)
 	handler3 := user5.NewHandler(todoRepository, unitOfWork, env)
 	todoController := todo2.NewController(todoHandler, handler2, handler3)
 	mainController := Controller{
 		User: controller,
 		Todo: todoController,
 	}
-	echoEcho := NewApp(mainController, env)
+	echoEcho := NewApp(mainController)
 	return echoEcho
 }
