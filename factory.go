@@ -1,8 +1,8 @@
 package main
 
 import (
+	"lazy/common/platform-echo/filters"
 	"lazy/common/platform-echo/guards"
-	"lazy/presentation"
 	todoPresentation "lazy/presentation/http/todo"
 	userPresentation "lazy/presentation/http/user"
 	"net/http"
@@ -31,7 +31,7 @@ func NewApp(controller Controller) *echo.Echo {
 		}),
 	)
 
-	app.HTTPErrorHandler = presentation.HTTPFilter
+	app.HTTPErrorHandler = filters.HttpFilter
 	app.GET("/", RootHandler)
 
 	authGroup := app.Group("/auth")

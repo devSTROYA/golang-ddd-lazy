@@ -1,4 +1,4 @@
-package presentation
+package filters
 
 import (
 	"errors"
@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func HTTPFilter(err error, ctx echo.Context) {
+func HttpFilter(err error, ctx echo.Context) {
 	if ctx.Response().Committed {
 		return
 	}
