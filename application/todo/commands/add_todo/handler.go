@@ -5,17 +5,15 @@ import (
 	uow "lazy/common"
 	todoDomain "lazy/domain/todo"
 	userDomain "lazy/domain/user"
-	"lazy/infrastructure/config"
 )
 
 type Handler struct {
 	todoRepo todoDomain.Repository
 	uow      uow.UnitOfWork
-	env      config.Env
 }
 
-func NewHandler(todoRepo todoDomain.Repository, uow uow.UnitOfWork, env config.Env) Handler {
-	return Handler{todoRepo, uow, env}
+func NewHandler(todoRepo todoDomain.Repository, uow uow.UnitOfWork) Handler {
+	return Handler{todoRepo, uow}
 }
 
 func (h *Handler) Execute(ctx context.Context, cmd Command) (Result, error) {
