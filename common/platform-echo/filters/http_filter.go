@@ -3,6 +3,7 @@ package filters
 import (
 	"errors"
 	"lazy/common/types"
+	"lazy/domain/todo"
 	"lazy/domain/user"
 	"net/http"
 
@@ -23,13 +24,13 @@ func HttpFilter(err error, ctx echo.Context) {
 		code = echoErr.Message.(string)
 	} else {
 		switch {
-		case errors.Is(err, user.ErrInvalidEmailFormat), errors.Is(err, user.ErrNameTooShort), errors.Is(err, user.ErrPasswordTooShort):
+		case errors.Is(err, user.ErrInvalidEmailFormat), errors.Is(err, user.ErrNameTooShort), errors.Is(err, user.ErrPasswordTooShort), errors.Is(err, todo.ErrTitleTooShort):
 			httpCode = http.StatusUnprocessableEntity
 
-		case errors.Is(err, user.ErrEmailAlreadyInUse):
+		case errors.Is(err, user.ErrEmailAlreadyInUse), errors.Is(err, todo.ErrTodoAlreadyCompleted):
 			httpCode = http.StatusConflict
 
-		case errors.Is(err, user.ErrUserDoesNotExist):
+		case errors.Is(err, user.ErrUserDoesNotExist), errors.Is(err, todo.ErrTodoDoesNotExist):
 			httpCode = http.StatusNotFound
 		}
 	}
