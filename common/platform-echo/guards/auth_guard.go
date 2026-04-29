@@ -13,12 +13,6 @@ import (
 func AuthGuard() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
-			allowAnonymous, ok := ctx.Get("ALLOW_ANONYMOUS").(bool)
-
-			if allowAnonymous && ok {
-				return next(ctx)
-			}
-
 			authHeader := ctx.Request().Header.Get("Authorization")
 			if authHeader == "" {
 				return echo.NewHTTPError(http.StatusUnauthorized, "NO_TOKEN_PROVIDED")
